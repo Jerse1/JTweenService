@@ -14,7 +14,6 @@ Tween.__index = Tween;
 	Fyi, I know this is hard to read;
 ]]
 function Tween:updateProperties(Time : number, Duration : number)
-	print(Time);
 	for i,v in pairs(self.Goals) do
 		if typeof(v[1]) == "Color3" then 
 			local Final = Color3.new(
