@@ -8,11 +8,6 @@ JTweenService.__index = JTweenService;
 
 local Tween = {};
 Tween.__index = Tween;
-
-local switch_Case = {
-	Color3 = {}
-}
-
 --[[
 	TODO: Make a switch statement instead of using if's;
 	TODO: Add in more Easings & Allow usage of Easing in the tweenInfo array;
@@ -53,7 +48,6 @@ function Tween:Update()
 	end
 
 	if self.PlaybackState == Enum.PlaybackState.Playing then
-		print((tick() - self.startTime)/Duration);
 		self:updateProperties((tick() - self.startTime)/Duration,Duration);
 	end
 end
@@ -66,17 +60,10 @@ function Tween:Destroy()
 end
 
 function Tween:Play()
-	if self.PlaybackSate == Enum.PlaybackState.Paused then
-		self.StartTime = self.StartTime + (tick() - self.PauseTime);
-		print(self.StartTime);
-	else
-		print(self.StartTime);
-		self.startTime = tick();
-	end
-	
-	
+	self.startTime = self.PlaybackState == Enum.PlaybackState.Paused and (self.startTime + (tick() - self.PauseTime)) or tick();
+
 	self.PlaybackState = Enum.PlaybackState.Playing;
-	
+
 	self.Connection = Heartbeat:Connect(function()
 		self:Update();
 	end)
@@ -85,7 +72,7 @@ end
 function Tween:Pause()
 	self.PauseTime = tick();
 
-	self.PlaybackSate = Enum.PlaybackState.Paused;
+	self.PlaybackState = Enum.PlaybackState.Paused;
 	self.Connection:Disconnect();
 end
 
