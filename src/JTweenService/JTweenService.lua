@@ -14,6 +14,7 @@ Tween.__index = Tween;
 	Fyi, I know this is hard to read;
 ]]
 function Tween:updateProperties(Time : number, Duration : number)
+	print(Time);
 	for i,v in pairs(self.Goals) do
 		if typeof(v[1]) == "Color3" then 
 			local Final = Color3.new(
@@ -41,6 +42,7 @@ end
 
 function Tween:Update()
 	local Duration = self.tweenInfo[1];
+	
 	if not (os.clock() - self.startTime < Duration) then
 		self.Connection:Disconnect();
 		self:Destroy();
@@ -77,8 +79,12 @@ function Tween:Pause()
 end
 
 function Tween:Cancel()
+	
 	self.PlaybackState = Enum.PlaybackState.Cancelled;
 	self.Connection:Disconnect();
+	for i,v in pairs(self.Goals) do
+		self.Goals[i] = {self.Instance[i],self.Goals[i][2]};
+	end
 end
 
 function JTweenService:Create(Instance : Instance, tweenInfo : table, Goals : table)
