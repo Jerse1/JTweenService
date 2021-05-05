@@ -51,7 +51,9 @@ function Tween:Update()
 		self:Destroy();
 		return;
 	end
-	if (tick() - self.startTime < Duration) and self.PlaybackState == Enum.PlaybackState.Playing then
+
+	if self.PlaybackState == Enum.PlaybackState.Playing then
+		print((tick() - self.startTime)/Duration);
 		self:updateProperties((tick() - self.startTime)/Duration,Duration);
 	end
 end
@@ -64,9 +66,14 @@ function Tween:Destroy()
 end
 
 function Tween:Play()
-	local Duration = self.tweenInfo[1];
-
-	self.startTime = tick();
+	if self.PlaybackSate == Enum.PlaybackState.Paused then
+		self.StartTime = self.StartTime + (tick() - self.PauseTime);
+		print(self.StartTime);
+	else
+		print(self.StartTime);
+		self.startTime = tick();
+	end
+	
 	
 	self.PlaybackState = Enum.PlaybackState.Playing;
 	
@@ -76,6 +83,8 @@ function Tween:Play()
 end
 
 function Tween:Pause()
+	self.PauseTime = tick();
+
 	self.PlaybackSate = Enum.PlaybackState.Paused;
 	self.Connection:Disconnect();
 end
