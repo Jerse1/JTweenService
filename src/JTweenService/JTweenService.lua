@@ -37,8 +37,7 @@ function Tween:updateProperties(Time : number, Duration : number)
 				Easings["Linear"](Time,v[1].X,v[2].X,Duration),
 				Easings["Linear"](Time,v[1].Y,v[2].Y,Duration),
 				Easings["Linear"](Time,v[1].Z,v[2].Z,Duration),
-				Easings["Linear"](Time,v[1].Z,v[2].Z,Duration),
-				)
+				Easings["Linear"](Time,v[1].Z,v[2].Z,Duration));
 		elseif typeof(v[1]) == "number" then
 			self.Instance[i] = Easings["Linear"](Time,v[1],v[2],Duration);
 		end
