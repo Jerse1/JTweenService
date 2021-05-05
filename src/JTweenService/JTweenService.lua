@@ -1,7 +1,7 @@
 local RS = game:GetService("RunService");
 local Heartbeat = RS.Heartbeat;
 
-local Easings = require(script.Easings);
+local Easings = require(script.Parent.Easings);
 
 local JTweenService = {};
 JTweenService.__index = JTweenService;
