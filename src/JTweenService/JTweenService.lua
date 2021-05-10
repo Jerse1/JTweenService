@@ -13,6 +13,10 @@ Tween.__index = Tween;
 	TODO: Add in more Easings & Allow usage of Easing in the tweenInfo array;
 	Fyi, I know this is hard to read;
 ]]
+
+--[[TODO: make a module for updating values such as:
+	call module, make a function for updating values based on the alpha, call the function when you want to do da tween with different easings value from 0-1;
+]]
 function Tween:updateProperties(Time : number, Duration : number)
 	for i,v in pairs(self.Goals) do
 		if typeof(v[1]) == "Color3" then 
@@ -28,7 +32,7 @@ function Tween:updateProperties(Time : number, Duration : number)
 				Easings["Linear"](Time,v[1].Z,v[2].Z,Duration));
 			self.Instance[i] = Final;
 		elseif typeof(v[1]) == "CFrame" then
-			local Final  = CFrame.new(
+			local Final = CFrame.new(
 				Easings["Linear"](Time,v[1].X,v[2].X,Duration),
 				Easings["Linear"](Time,v[1].Y,v[2].Y,Duration),
 				Easings["Linear"](Time,v[1].Z,v[2].Z,Duration),
