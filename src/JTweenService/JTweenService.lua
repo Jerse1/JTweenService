@@ -42,7 +42,6 @@ function Tween:Destroy()
 	self = nil;
 end
 
-
 function Tween:Play()
 	self.startTime = self.PlaybackState == Enum.PlaybackState.Paused and (self.startTime + (os.clock() - self.PauseTime)) or os.clock();
 
