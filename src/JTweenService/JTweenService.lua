@@ -1,9 +1,9 @@
+local Lerps = require(script.Parent.Lerps);
+local Easings = require(script.Parent.Easings);
+local Types = require(script.Parent.Types);
+
 local RS = game:GetService("RunService");
 local Heartbeat = RS.Heartbeat;
-
-local Easings = require(script.Parent.Easings);
-
-local Types = require(script.Parent.Types);
 
 local JTweenService = {};
 JTweenService.__index = JTweenService;
@@ -21,8 +21,10 @@ Tween.__index = Tween;
 ]]
 function Tween:updateProperties(Alpha : number, Duration : number)
 	for i,v in pairs(self.Goals) do
-		self.Instance[i] = Types[typeof(v[1])](table.unpack(v),Alpha);
-		if typeof(v[1]) == "Color3" then 
+		Alpha = Easings[self.tweenInfo[2]](Alpha);
+		print(Alpha);
+		self.Instance[i] = Lerps[typeof(v[1])](v[1], v[2], Alpha);
+		--[[if typeof(v[1]) == "Color3" then
 			local Final = Color3.new(
 				Easings["Linear"](Alpha,v[1].R,v[2].R,Duration),
 				Easings["Linear"](Alpha,v[1].G,v[2].G,Duration),
@@ -42,7 +44,7 @@ function Tween:updateProperties(Alpha : number, Duration : number)
 				Easings["Linear"](Alpha,v[1].Z,v[2].Z,Duration));
 		elseif typeof(v[1]) == "number" then
 			self.Instance[i] = Easings["Linear"](Alpha,v[1],v[2],Duration);
-		end
+		end]]
 	end
 end
 
@@ -96,9 +98,11 @@ function Tween:Cancel()
 end
 
 function JTweenService:Create(Instance : Instance, tweenInfo : table, Goals : table)
-	assert(Instance,"[JTweenService] : [1] argument is missing");
-	assert(tweenInfo,"[JTweenService] : [2] argument is missing");
-	assert(Goals,"[JTweenService] : [3] argument is missing");
+	assert(Instance, "[JTweenService] : [1] argument is missing");
+	assert(tweenInfo, "[JTweenService] : [2] argument is missing");
+	assert(Goals, "[JTweenService] : [3] argument is missing");
+
+	assert(tweenInfo.Easing, "[JTweenService] : [2] [Easing] argument is missing");
 
 	for i,v in pairs(Goals) do
 		assert(Instance[i],("[JTweenService] : %s doesn't have a property called \"%s\"."):format(Instance:GetFullName(),i));
@@ -110,7 +114,6 @@ function JTweenService:Create(Instance : Instance, tweenInfo : table, Goals : ta
 		Instance = Instance,
 		tweenInfo = tweenInfo,
 		Goals = Goals 
-
 	},Tween);
 end
 
