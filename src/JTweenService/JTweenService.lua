@@ -3,6 +3,8 @@ local Heartbeat = RS.Heartbeat;
 
 local Easings = require(script.Parent.Easings);
 
+local Types = require(script.Parent.Types);
+
 local JTweenService = {};
 JTweenService.__index = JTweenService;
 
@@ -17,32 +19,34 @@ Tween.__index = Tween;
 --[[TODO: make a module for updating values such as:
 	call module, make a function for updating values based on the alpha, call the function when you want to do da tween with different easings value from 0-1;
 ]]
-function Tween:updateProperties(Time : number, Duration : number)
+function Tween:updateProperties(Alpha : number, Duration : number)
 	for i,v in pairs(self.Goals) do
+		self.Instance[i] = Types[typeof(v[1])](table.unpack(v),Alpha);
 		if typeof(v[1]) == "Color3" then 
 			local Final = Color3.new(
-				Easings["Linear"](Time,v[1].R,v[2].R,Duration),
-				Easings["Linear"](Time,v[1].G,v[2].G,Duration),
-				Easings["Linear"](Time,v[1].B,v[2].B,Duration));
+				Easings["Linear"](Alpha,v[1].R,v[2].R,Duration),
+				Easings["Linear"](Alpha,v[1].G,v[2].G,Duration),
+				Easings["Linear"](Alpha,v[1].B,v[2].B,Duration));
 			self.Instance[i] = Final;
 		elseif typeof(v[1]) == "Vector3" then
 			local Final = Vector3.new(
-				Easings["Linear"](Time,v[1].X,v[2].X,Duration),
-				Easings["Linear"](Time,v[1].Y,v[2].Y,Duration),
-				Easings["Linear"](Time,v[1].Z,v[2].Z,Duration));
+				Easings["Linear"](Alpha,v[1].X,v[2].X,Duration),
+				Easings["Linear"](Alpha,v[1].Y,v[2].Y,Duration),
+				Easings["Linear"](Alpha,v[1].Z,v[2].Z,Duration));
 			self.Instance[i] = Final;
 		elseif typeof(v[1]) == "CFrame" then
 			local Final = CFrame.new(
-				Easings["Linear"](Time,v[1].X,v[2].X,Duration),
-				Easings["Linear"](Time,v[1].Y,v[2].Y,Duration),
-				Easings["Linear"](Time,v[1].Z,v[2].Z,Duration),
-				Easings["Linear"](Time,v[1].Z,v[2].Z,Duration));
+				Easings["Linear"](Alpha,v[1].X,v[2].X,Duration),
+				Easings["Linear"](Alpha,v[1].Y,v[2].Y,Duration),
+				Easings["Linear"](Alpha,v[1].Z,v[2].Z,Duration),
+				Easings["Linear"](Alpha,v[1].Z,v[2].Z,Duration));
 		elseif typeof(v[1]) == "number" then
-			self.Instance[i] = Easings["Linear"](Time,v[1],v[2],Duration);
+			self.Instance[i] = Easings["Linear"](Alpha,v[1],v[2],Duration);
 		end
 	end
 end
 
+--// Function that get's called every frame to update the tween;
 function Tween:Update()
 	local Duration = self.tweenInfo[1];
 	
@@ -57,6 +61,7 @@ function Tween:Update()
 	end
 end
 
+--// Destroying the tween by making the table have weak keys so it gets collected by garbage collector;
 function Tween:Destroy()
 	if self.Connection then self.Connection:Disconnect(); end
 	self.__mode = "k";
