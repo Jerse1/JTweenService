@@ -6,19 +6,15 @@
 * [Setup](#setup)
 
 ## General info
-This project is simple Lorem ipsum dolor generator.
-	
-## Technologies
-Project is created with:
-* Lorem version: 12.3
-* Ipsum version: 2.33
-* Ament library version: 999
-	
-## Setup
-To run this project, install it locally using npm:
+This Module is supposed to act like TweenService, but with more customization.
 
+## Setup
 ```
-$ cd ../lorem
-$ npm install
-$ npm start
+local Instance : Instance = PATH_TO_INSTANCE;
+local tweenInfo : table = {};
+local Goals : table = {};
+
+local Tween = JTweenService.new(Instance : Instance, tweenInfo : table, Goals : table) --// Making a tween;
+
+Tween:Play();
 ```
