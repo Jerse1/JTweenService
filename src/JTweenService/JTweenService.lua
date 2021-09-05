@@ -8,17 +8,17 @@ function JTweenService.new(Instance : Instance, tweenInfo : table, Goals : table
 	assert(tweenInfo, "[JTweenService] : [2] argument is missing");
 	assert(Goals, "[JTweenService] : [3] argument is missing");
 
-	for i, _: nil in pairs(Goals) do
-		assert(Instance[i],("[JTweenService] : %s doesn't have a property called \"%s\"."):format(Instance:GetFullName(),i));
-		Goals[i] = {Instance[i],Goals[i]};
+	for i : string in pairs(Goals) do
+		assert(Instance[i], ("[JTweenService] : %s doesn't have a property called \"%s\"."):format(Instance:GetFullName(), i));
+		Goals[i] = {Instance[i], Goals[i]};
 	end
 
 	return setmetatable({
 		PlaybackState = Enum.PlaybackState.Begin,
 		Instance = Instance,
 		tweenInfo = tweenInfo,
-		Goals = Goals 
-	},Tween);
+		Goals = Goals
+	}, Tween);
 end
 
 return JTweenService;
