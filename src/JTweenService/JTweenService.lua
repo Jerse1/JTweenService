@@ -4,9 +4,9 @@ local JTweenService = {};
 JTweenService.__index = JTweenService;
 
 function JTweenService.new(Instance : Instance, tweenInfo : table, Goals : table)
-	assert(Instance, "[JTweenService] : [1] argument is missing");
-	assert(tweenInfo, "[JTweenService] : [2] argument is missing");
-	assert(Goals, "[JTweenService] : [3] argument is missing");
+	assert(Instance, "[JTweenService] : [Instance] argument is missing");
+	assert(tweenInfo, "[JTweenService] : [tweenInfo] argument is missing");
+	assert(Goals, "[JTweenService] : [Goals] argument is missing");
 
 	for i : string in pairs(Goals) do
 		assert(Instance[i], ("[JTweenService] : %s doesn't have a property called \"%s\"."):format(Instance:GetFullName(), i));

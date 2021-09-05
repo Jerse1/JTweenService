@@ -9,20 +9,20 @@ local Tween = {};
 Tween.__index = Tween;
 
 --// Function that gets called after the Update function to update the values;
-function Tween:updateProperties(Alpha : number, Duration : number)
+function Tween:_updateProperties(Alpha : number, Duration : number)
 	for Property : string, Values : table in pairs(self.Goals) do
 		local tweenFunction = self._tweenFunction;
-		
+
 		Alpha = tweenFunction(Alpha);
 
-		self.Instance[Property] = self._Lerps[Property](table.unpack(Values), Alpha)-- Lerps[typeof(v[1])](v[1], v[2], Alpha);
+		self.Instance[Property] = self._Lerps[Property](Values[1], Values[2], Alpha)-- Lerps[typeof(v[1])](v[1], v[2], Alpha);
 	end
 end
 
 --// Function that gets called every frame to update the tween;
 function Tween:Update()
 	local Duration = self.tweenInfo["Duration"];
-	
+
 	if not (os.clock() - self.startTime < Duration) then
 		self.Connection:Disconnect();
 		self:Destroy();
@@ -30,39 +30,42 @@ function Tween:Update()
 	end
 
 	if self.PlaybackState == Enum.PlaybackState.Playing then
-		self:updateProperties((os.clock() - self.startTime) / Duration, Duration);
+		self:_updateProperties((os.clock() - self.startTime) / Duration, Duration);
 	end
 end
 
 --// Destroying the tween by making the table have weak keys so it gets collected by garbage collector;
 function Tween:Destroy()
 	if self.Connection then self.Connection:Disconnect(); end
-	self.__mode = "k";
-	setmetatable(self,nil);
+	--self.__mode = "k";
 	self = nil;
 end
 
-function Tween:_Play(Cycle, isReverse)
+function Tween:_Play(self, Cycle, isReverse)
 	self.startTime = self.PlaybackState == Enum.PlaybackState.Paused and (self.startTime + (os.clock() - self.PauseTime)) or os.clock();
 
 	local tweenInfo = self.tweenInfo;
 
 	self._tweenFunction = Easings[tweenInfo["EasingStyle"] or "Linear"];
 
-	self._tweenFunction = self._tweenFunction[tweenInfo["EasingDirection"] or "In" or "Out"];
+	if type(self._tweenFunction) ~= "function" then
+		self._tweenFunction = self._tweenFunction[tweenInfo["EasingDirection"] or "In" or "Out"];
+	end
+
+	self._Lerps = {};
 
 	for Property, Values in pairs(self.Goals) do
-		self.Lerps[Property] = Lerps[Property];
+		self._Lerps[Property] = Lerps[typeof(Values[1])];
 	end
-	
+
 	if tweenInfo.DelayTime and type(tweenInfo.DelayTime) == "number" and tweenInfo.DelayTime > 0 then
 		self.PlaybackState = Enum.PlaybackState.Delayed;
 
 		task.wait(tweenInfo.DelayTime);
 	end
-	
+
 	for i,v in pairs(self.Goals) do
-		self.Goals[i] = {self.Instance[i], self.Goals[i][2]};
+		self.Goals[i] = {self.Instance[i], v[2]};
 	end
 
 	self.Connection = Heartbeat:Connect(function()
@@ -73,8 +76,9 @@ function Tween:_Play(Cycle, isReverse)
 end
 
 function Tween:Play()
-	Tween:_Play();
+	Tween:_Play(self); --// I have to send self as an argument due to some bug where the metadata gets deleted
 end
+
 
 function Tween:Pause()
 	self.PauseTime = os.clock();
