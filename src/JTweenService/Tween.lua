@@ -41,7 +41,7 @@ function Tween:Destroy()
 	self = nil;
 end
 
-function Tween:_Play(self, Cycle, isReverse)
+function Tween:_Play(Cycle, isReverse)
 	self.startTime = self.PlaybackState == Enum.PlaybackState.Paused and (self.startTime + (os.clock() - self.PauseTime)) or os.clock();
 
 	local tweenInfo = self.tweenInfo;
@@ -76,7 +76,7 @@ function Tween:_Play(self, Cycle, isReverse)
 end
 
 function Tween:Play()
-	Tween:_Play(self); --// I have to send self as an argument due to some bug where the metadata gets deleted
+	self:_Play();
 end
 
 

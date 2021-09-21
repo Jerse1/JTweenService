@@ -8,6 +8,8 @@ local sqrt = math.sqrt
 
 local Easings;
 
+--// Thanks to afrxo#7024 for helping me insert these easings styles
+
 Easings = {
 	["Sine"] = {
 		["In"] = function(x)
